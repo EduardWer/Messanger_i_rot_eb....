@@ -1,0 +1,105 @@
+﻿<Window x:Class="Messanger.View.Chat"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Messanger"
+        mc:Ignorable="d"
+        xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+        xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+        xmlns:internal="clr-namespace:MaterialDesignThemes.Wpf.Internal;assembly=MaterialDesignThemes.Wpf" 
+        xmlns:viewmodel="clr-namespace:Messanger.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:ChatVM}"
+        Title="Chat" Height="500" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="3" Background="#e8f0fe" VerticalAlignment="Stretch"  
+                HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="4">
+            <ListView Style="{DynamicResource ListViewStyle}" Grid.Row="1"  VerticalAlignment="Stretch" Name="Listbox"
+                     FontSize="14" FontFamily="Malgun Gothic Semilight"
+                     ItemsSource="{Binding Usernames}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Kind="Person" 
+                                    Height="20" Width="20" Foreground="#afafaf"/>
+                            <Label Content="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0 20 0 0" 
+                    VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <Button x:Name="ConnectBtn" Width="300" Height="30" Margin="0 0 10 0"
+                    Style="{DynamicResource MaterialDesignOutlinedButton}" Cursor="Hand" 
+                    Content="{Binding connectionInfo}" Command="{Binding OpenConnectDialogCommand}" 
+                    FontFamily="Malgun Gothic Semilight" Click="ConnectBtn_Click"/>
+            <Button x:Name="exitBtn" Width="100" Height="30" 
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Background="Red" Foreground="White"
+                    Command="{Binding OpenMainMenuCommand}"
+                    Cursor="Hand" FontFamily="Malgun Gothic Semilight" 
+                    Content="Exit"/>
+        </StackPanel>
+
+        <Border Grid.Column="1"  VerticalAlignment="Stretch"  Margin="10" CornerRadius="4" BorderThickness="1" 
+                BorderBrush="White" Background="White" HorizontalAlignment="Stretch" Grid.Row="1">
+            <ListView ItemsSource="{Binding Messages}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock FontSize="10" Text="{Binding Username}" Grid.Row="0"/>
+                            <TextBlock FontSize="16" Text="{Binding MessageText}" Grid.Row="1">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsOwn}" Value="True">
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
+
+    
+        <TextBox x:Name="textBox" VerticalAlignment="Center" Margin="50,0" 
+              FontSize="13" Grid.Row="2" 
+             Grid.Column="1" Background="White" Text="{Binding MessageText, Mode=TwoWay}"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 40 0"  Grid.Row="2" Grid.Column="1">
+            <Button x:Name="sendMessage" Height="30" Width="40" IsDefault="True"
+                    Style="{DynamicResource SendButtonStyle}" Command="{Binding SendMessageCommand}" Cursor="Hand"
+                    Margin="10" Click="sendMessage_Click">
+                <materialDesign:PackIcon 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Kind="Send" 
+                                    Height="20" Width="20" Foreground="#adadad"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
+
